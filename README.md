@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HemScope
 
-## Getting Started
+Gothenburg property intelligence. This foundation provides a landing page and minimal TypeScript domain contracts. Search is visibly disabled; text entered in the page is not submitted or persisted.
 
-First, run the development server:
+## Development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Run `npm install`, then `npm run dev` and open http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Validation: `npm run lint` and `npm run build`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The project uses Next.js 16.3.5, React 19, TypeScript, Tailwind CSS 4, and the App Router. Read the installed Next.js guides in `node_modules/next/dist/docs/` before changing framework code. System fonts avoid external font downloads.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture
 
-## Learn More
+| Path | Responsibility |
+| --- | --- |
+| `app/` | Routes, layouts, metadata, and global styles |
+| `components/` | UI components, currently a server-rendered search input |
+| `types/` | Shared property, cost-profile, coordinate, POI, buyer, search, and financial contracts |
+| `src/data/` | Local synthetic properties and sourced POIs; see its README for calibration and provenance |
+| `domain/properties/` | Future deterministic filtering and comparisons |
+| `domain/finance/` | Future deterministic financial engine |
+| `domain/location/` | Pure Haversine distances and nearest-amenity lookup |
+| `utils/` | Future domain-independent helpers |
+| `server/` | Future server orchestration and data/integration access |
+| `app/api/<feature>/route.ts` | Convention for future HTTP endpoints; none created yet |
 
-To learn more about Next.js, take a look at the following resources:
+Unimplemented folders contain short responsibility notes, not stub implementations. The location engine accepts coordinates and POIs from its caller. UI consumes shared types and eventual domain outputs; domain code remains independent of React, Next.js, and integrations. Server code will coordinate data access and domain functions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+AI is reserved for language interpretation and explanations. Database queries, filtering, distance and financial calculations, comparisons, and validation must use deterministic software.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contract conventions
 
-## Deploy on Vercel
+- Monetary fields explicitly use SEK; size uses square meters; walking time uses minutes.
+- Interest rates are annual decimal fractions (`0.04` means 4%).
+- `Property.area` means neighborhood/district. `Property.location` holds latitude and longitude in decimal degrees.
+- Association fees may be `null` when unknown or inapplicable; do not interpret null as zero.
+- Search requirements are optional because a user may leave them unspecified.
+- FinancialResult describes monthly cash requirements including amortization, not just economic expense. Calculation policy and rounding remain to be defined.
+- Types are compile-time contracts, not runtime validation. Validate external data when integrations are added.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The local demo dataset is not connected to the UI. There is no database, authentication, parser, financial engine, LLM integration, or map API. Add these only in separately scoped development tasks.
