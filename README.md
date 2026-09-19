@@ -18,7 +18,7 @@ The project uses Next.js 16.3.5, React 19, TypeScript, Tailwind CSS 4, and the A
 | `components/` | UI components, currently a server-rendered search input |
 | `types/` | Shared property, cost-profile, coordinate, POI, buyer, search, and financial contracts |
 | `src/data/` | Local synthetic properties and sourced POIs; see its README for calibration and provenance |
-| `domain/properties/` | Future deterministic filtering and comparisons |
+| `domain/properties/` | Deterministic hard-constraint candidate retrieval |
 | `domain/finance/` | Deterministic apartment financing, recurring costs, and interest-rate scenarios |
 | `domain/location/` | Pure Haversine distances and nearest-amenity lookup |
 | `utils/` | Future domain-independent helpers |

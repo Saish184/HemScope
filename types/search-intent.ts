@@ -2,14 +2,27 @@ import type { AmenityType } from "./location";
 
 /** Omitted requirements are unspecified, not zero. */
 export interface SearchIntent {
-  city?: string;
-  maximumPurchasePriceSek?: number;
-  minimumRooms?: number;
-  maximumMonthlyCostSek?: number;
-  desiredNearbyAmenities?: AmenityType[];
-  /**
-   * Desired walking-time limit to each requested amenity. Requires future routing
-   * data; straight-line/geodesic distance cannot validate this requirement.
-   */
-  maximumWalkingTimeMinutes?: number;
+  hardConstraints?: {
+    city?: string;
+    maximumPurchasePriceSek?: number;
+    minimumRooms?: number;
+    /** Inclusive exclusion boundary, unlike the preferred comfort level below. */
+    maximumMonthlyCashRequirementSek?: number;
+    /** Unsupported until routing exists; candidate search rejects this constraint. */
+    maximumWalkingTimeMinutes?: number;
+  };
+  locationPreferences?: {
+    desiredNearbyAmenities?: AmenityType[];
+  };
+  financialPreferences?: {
+    availableDownPaymentSek?: number;
+    /** Comfort preference only; does not exclude properties. */
+    preferredMonthlyCashRequirementSek?: number;
+    /** Annual decimal fraction; 0.04 means 4%. */
+    assumedAnnualInterestRate?: number;
+  };
+  tradeOffPreferences?: {
+    /** Explicit willingness, not a numerical premium or a ranking instruction. */
+    willingToPayMoreForLocation?: boolean;
+  };
 }

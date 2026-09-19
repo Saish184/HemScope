@@ -6,6 +6,8 @@ export type PropertyType = "apartment" | "house" | "townhouse";
 export interface Property {
   id: string;
   address: string;
+  /** Explicit city name; distinct from neighborhood and metropolitan region. */
+  city: string;
   /** Neighborhood or district, not floor area. */
   area: string;
   purchasePriceSek: number;
