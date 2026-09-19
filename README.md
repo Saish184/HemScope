@@ -19,7 +19,7 @@ The project uses Next.js 16.3.5, React 19, TypeScript, Tailwind CSS 4, and the A
 | `types/` | Shared property, cost-profile, coordinate, POI, buyer, search, and financial contracts |
 | `src/data/` | Local synthetic properties and sourced POIs; see its README for calibration and provenance |
 | `domain/properties/` | Future deterministic filtering and comparisons |
-| `domain/finance/` | Future deterministic financial engine |
+| `domain/finance/` | Deterministic apartment financing, recurring costs, and interest-rate scenarios |
 | `domain/location/` | Pure Haversine distances and nearest-amenity lookup |
 | `utils/` | Future domain-independent helpers |
 | `server/` | Future server orchestration and data/integration access |
@@ -36,7 +36,7 @@ AI is reserved for language interpretation and explanations. Database queries, f
 - `Property.area` means neighborhood/district. `Property.location` holds latitude and longitude in decimal degrees.
 - Association fees may be `null` when unknown or inapplicable; do not interpret null as zero.
 - Search requirements are optional because a user may leave them unspecified.
-- FinancialResult describes monthly cash requirements including amortization, not just economic expense. Calculation policy and rounding remain to be defined.
+- FinancialResult separates recurring housing costs from monthly cash requirements including amortization. V1 training rules and missing-cost handling are documented in `domain/finance/README.md`; rounding belongs at presentation boundaries.
 - Types are compile-time contracts, not runtime validation. Validate external data when integrations are added.
 
-The local demo dataset is not connected to the UI. There is no database, authentication, parser, financial engine, LLM integration, or map API. Add these only in separately scoped development tasks.
+The local demo dataset and domain engines are not connected to the UI. There is no database, authentication, parser, LLM integration, or map API. Add these only in separately scoped development tasks.
