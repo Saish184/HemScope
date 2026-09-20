@@ -33,7 +33,7 @@ If a remaining candidate has unknown costs, an unsupported property type, or inv
 
 Run `node --test tests/property-search.test.mjs`, `node --test tests/*.test.mjs`, `npm run lint`, and `npm run build`. TypeScript's allowImportingTsExtensions is enabled with the existing noEmit setting so the direct financial-engine import also runs under Node's native TypeScript test support.
 
-No scoring, ranking, recommendations, AI, parsing, routing, comparison-result layer, or UI integration is implemented.
+The property domain layer, including Property Comparison, does not perform AI interpretation, natural-language parsing, scoring, ranking, recommendations, routing, or UI integration. HemScope's server-side AI intent parser is implemented separately in `server/ai/`.
 
 ## Property analysis
 
@@ -55,3 +55,22 @@ Inputs are not mutated. Returned property and matched POI objects retain their o
 This layer combines property, financial, and geographic facts as input for a future AI analysis layer. It does not interpret preferences, enforce search constraints, score, rank, or recommend properties. There is no additional calculation logic, dataset import, UI, API, or dependency.
 
 Run `node --test tests/property-analysis.test.mjs` for composition tests and `node --test tests/*.test.mjs` for all domain tests, followed by lint and build.
+
+## Property comparison
+
+The architectural responsibilities remain separate:
+
+- Property Search: "Which properties satisfy hard constraints?"
+- Property Analysis: "What objective facts can we calculate about each property?"
+- Property Comparison: "How do those objective facts differ between candidates?"
+- AI Analyst (future): "What do those differences mean given the user's preferences?"
+
+`compareProperties(analyses)` in `property-comparison.ts` returns a `PropertyComparison` containing only `{ properties: PropertyAnalysis[] }`. The analyses expose property dimensions, complete financial results and sensitivity scenarios, and requested geographic facts for comparison. No fields or calculations are duplicated. No derived differences are added at this stage.
+
+The function accepts a readonly array, creates a shallow array copy, and preserves the supplied order, duplicate entries, and original analysis-object references. Empty and single-property collections are valid. Editing the returned array does not alter the input array; nested objects are shared and should be treated as shared data, not an independent snapshot.
+
+Comparison neither reads nor recalculates financial/location values, and does not sort, rank, score, choose a winner, or infer preferences. Missing POI matches remain null and unrequested amenities remain omitted. It trusts the supplied analyses and does not verify that they used identical buyer assumptions or POI inventories; callers should supply consistent assumptions where comparisons require them.
+
+A future consumer can receive SearchIntent alongside PropertyComparison to interpret these facts. No AI, UI, network access, dependencies, or recommendation logic is introduced here.
+
+Run `node --test tests/property-comparison.test.mjs` for comparison tests, then all domain tests, lint, build, and `git diff --check`.

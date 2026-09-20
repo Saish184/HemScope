@@ -39,4 +39,4 @@ AI is reserved for language interpretation and explanations. Database queries, f
 - FinancialResult separates recurring housing costs from monthly cash requirements including amortization. V1 training rules and missing-cost handling are documented in `domain/finance/README.md`; rounding belongs at presentation boundaries.
 - Types are compile-time contracts, not runtime validation. Validate external data when integrations are added.
 
-The local demo dataset and domain engines are not connected to the UI. There is no database, authentication, parser, LLM integration, or map API. Add these only in separately scoped development tasks.
+The local demo dataset and domain engines are not connected to the UI. A server-only OpenAI intent parser converts natural language to validated SearchIntent; see `server/ai/README.md` for setup and limitations. There is no database, authentication, AI analyst, or map API.
